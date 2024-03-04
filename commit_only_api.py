@@ -40,9 +40,11 @@ class gitlab:
             result = subprocess.run(['curl', '--header', header, '--url', api_url], capture_output=True, text=True, check=True)
         except Exception as e:
             if DEBUG:
-                print(e)
-            raise Exception('')
+                print(f'subprocess command error: {e}')
+            raise Exception('subprocessコマンドの実行に失敗しました。\nコミットsha番号:{self.source_commit_sha}')
         output = result.stdout
+        if DEBUG:
+            print(f'Commits API response:\n{output}')
         if '404' in output:
             raise Exception(f'指定のコミットを取得できませんでした。\nコミットsha番号:{self.source_commit_sha}')
         # json.loads() 関数を使用して文字列をPythonのリスト型に変換
