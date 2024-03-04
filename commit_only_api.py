@@ -19,7 +19,7 @@ class gitlab:
             Args:
                 self(gitlab class) : 第一引数
             Returns
-                dictionary: file_changes(ファイルの変更情報)
+                list: file_changes(ファイルの変更情報)
                 期待されるデータ例
                     [
                         {
@@ -31,7 +31,7 @@ class gitlab:
                             "new_file": false,
                             "renamed_file": false,
                             "deleted_file": false
-                        }
+                        }, ...
                     ]
         """
         api_url = f'{GITLAB_API_ENDOPOINT}/projects/{self.source_project_name}/repository/commits/{self.source_commit_sha}/diff'
@@ -45,4 +45,6 @@ class gitlab:
         output = result.stdout
         if '404' in output:
             raise Exception(f'指定のコミットを取得できませんでした。\nコミットsha番号:{self.source_commit_sha}')
+        # json.loads() 関数を使用して文字列をPythonのリスト型に変換
         file_changes = json.loads(output)
+        return file_changes
